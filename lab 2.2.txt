@@ -1,0 +1,59 @@
+/*
+4. Задано 8 рядків тексту. У рядку до 8 символів. Доповнити пробілами рядки до 8
+символів. Шифрувати тексти таким чином, щоб кожний символ тексту записувався у
+два байта. Два байта мають таку структуру: у бітах 0-2 знаходиться номер рядка
+символу (3 біти), у бітах 3-10 ASCII - код букви (8 біт), 11 біт – біт парності
+перших двох полів (1 біт) у бітах 12-14 позиція символу в рядку (3 біти), 15 біт
+- біт парності попереднього поля (1 біт)
+*/
+
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+void encodeBytes(string text, int number){
+  const char* str = text.c_str();
+  unsigned short r=0,t,b,w;
+  unsigned char c;
+  for(int i = 0; i < 8; i++){
+    c = str[i];
+    r |= number;
+    w = c << 3;
+    r |= w;
+    b = 0; t = 1;
+    for (int k = 0;k<11; k++){
+      if (r&t) { if (b == 0) b = 1; else b = 0;
+      }
+      t <<= 1;
+    }
+    w = 1<<11;
+    if (b) r |= w;
+    w = i << 12;
+    r |= i;
+    if (r & 0x4000) r |= 0x8000;
+    cout << hex << r << endl;
+  }
+} 
+
+// Функція для доповнення рядок символом пробіл, якщо менше ніж 8 символів
+std::string spaceAdd(const std::string &input) {
+  std::string result = input;
+  while (result.length() < 8) {
+    result += ' ';
+  }
+  return result;
+}
+
+int main() {
+  string text[8];
+  // Зчитуємо рядки тексту
+  for (int i = 0; i < 8; ++i) {
+    do {
+      cout<<"Введіть рядок "<< i+1<<" :";
+      std::getline(std::cin, text[i]);
+    } while (text[i].length() > 8);
+    text[i] = spaceAdd(text[i]);
+    encodeBytes(text[i], i);
+  }
+}

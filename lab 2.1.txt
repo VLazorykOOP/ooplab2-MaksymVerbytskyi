@@ -1,0 +1,14 @@
+#include <iostream>
+
+int main() {
+  int a = 100, b = 400, c = 320, d = 120;
+  int suma1 = b + (b << 5);
+  
+  double suma2 = (d << 4) - d + (a << 4) - (a << 2) >> 9;
+  
+  double suma3 = (c << 6) - c + (d << 4) - (d << 2);
+
+  int suma = b + (b << 5) + ((d << 4) - d + (a << 4) - (a << 2) >> 9) -
+             (c << 6) - c + (d << 4) - (d << 2);
+  std::cout << suma;
+}
